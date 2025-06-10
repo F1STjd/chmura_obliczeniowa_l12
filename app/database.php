@@ -47,17 +47,16 @@ header('Content-Type: text/html; charset=utf-8');
             $pdo = new PDO("mysql:host=$mysql_host;dbname=$mysql_db;charset=utf8mb4", $mysql_user, $mysql_pass);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            
-            echo '<div class="success">✅ <strong>Database Connection Successful!</strong></div>';
+              echo '<div class="success">✅ <strong>Database Connection Successful!</strong></div>';
             
             // Get MySQL version and info
-            $stmt = $pdo->query("SELECT VERSION() as mysql_version, NOW() as current_time, DATABASE() as current_db");
+            $stmt = $pdo->query("SELECT VERSION() as mysql_version, NOW() as server_time, DATABASE() as current_db");
             $info = $stmt->fetch();
             
             echo '<div class="info">';
             echo '<strong>MySQL Version:</strong> ' . $info['mysql_version'] . '<br>';
             echo '<strong>Current Database:</strong> ' . $info['current_db'] . '<br>';
-            echo '<strong>Server Time:</strong> ' . $info['current_time'] . '<br>';
+            echo '<strong>Server Time:</strong> ' . $info['server_time'] . '<br>';
             echo '</div>';
             
             // Database statistics
