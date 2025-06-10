@@ -1,0 +1,85 @@
+# Docker Compose v2 - LEMP Stack with phpMyAdmin
+# Author: Konrad Nowak
+# Description: Complete LEMP stack (Linux, Nginx, MySQL, PHP) with phpMyAdmin for local development
+
+services:
+  # Nginx - Reverse Proxy & Static File Server
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: lemp_nginx
+    restart: unless-stopped
+    ports:
+      - "4001:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./app:/var/www/html:ro
+    depends_on:
+      - php-fpm
+    networks:
+      - frontend
+      - backend
+  # PHP-FPM - PHP Interpreter
+  php-fpm:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: lemp_php
+    restart: unless-stopped
+    volumes:
+      - ./app:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini:ro
+    networks:
+      - backend
+    environment:
+      - PHP_INI_SCAN_DIR="/usr/local/etc/php/conf.d:/usr/local/etc/php-fpm.d"
+  # MySQL - Database Server
+  mysql:
+    image: mysql:8.0
+    container_name: lemp_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-lemp_db}
+      MYSQL_USER: ${MYSQL_USER:-lemp_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-lemp_pass}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+    networks:
+      - backend
+    command: --default-authentication-plugin=mysql_native_password
+
+  # phpMyAdmin - Database Management GUI
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    container_name: lemp_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "6001:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: ${MYSQL_USER:-lemp_user}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-lemp_pass}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
+    depends_on:
+      - mysql
+    networks:
+      - frontend
+      - backend
+
+# Named Networks
+networks:
+  frontend:
+    driver: bridge
+    name: lemp_frontend
+  backend:
+    driver: bridge
+    name: lemp_backend
+
+# Named Volumes
+volumes:
+  mysql_data:
+    driver: local
+    name: lemp_mysql_data
