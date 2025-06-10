@@ -255,10 +255,8 @@ docker compose down -v
    - MySQL (sieć: backend)
    - phpMyAdmin (port 6001, sieci: backend + frontend)
 4. ✅ **Obrazy z tagami** - wszystkie z DockerHub ze zdefiniowanymi wersjami
-5. ✅ **Strona startowa** - index.php wyświetla "Konrad Nowak"
-6. ✅ **phpMyAdmin** - dostępny na porcie 6001, możliwość logowania i tworzenia baz
-7. ✅ **Repozytorium GitHub** - `chmura_obliczeniowa_l12` utworzone przez CLI
-8. ✅ **Sprawozdanie** - wszystkie komendy i wyniki w README.md
+5. ✅ **phpMyAdmin** - dostępny na porcie 6001, możliwość logowania i tworzenia baz
+6. ✅ **Sprawozdanie** - wszystkie komendy i wyniki w README.md
 
 ### Uzasadnienie sieci dla phpMyAdmin:
 phpMyAdmin jest podłączony do **obu sieci** (backend + frontend) ponieważ:
@@ -266,6 +264,5 @@ phpMyAdmin jest podłączony do **obu sieci** (backend + frontend) ponieważ:
 - **frontend** - musi być dostępny z przeglądarki (port 6001)
 
 ---
-
-**Projekt zrealizowany w 100% zgodnie z wymaganiami laboratorium.**  
+  
 **Autor:** Konrad Nowak | **Data:** 10 czerwca 2025
